@@ -352,6 +352,8 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
 		
 		if (isJvmRefer) {
 			URL url = new URL(Constants.LOCAL_PROTOCOL, NetUtils.LOCALHOST, 0, interfaceClass.getName()).addParameters(map);
+
+			//核心函数
 			invoker = refprotocol.refer(interfaceClass, url);
             if (logger.isInfoEnabled()) {
                 logger.info("Using injvm service " + interfaceClass.getName());
@@ -388,6 +390,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                 }
             }
 
+            //如果一个url表示只有一台provider
             if (urls.size() == 1) {
                 invoker = refprotocol.refer(interfaceClass, urls.get(0));
             } else {
@@ -399,6 +402,8 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                         registryURL = url; // 用了最后一个registry url
                     }
                 }
+
+                //如果有多个url表示有多台provider，这个时候用cluster，里面包含了router，负载均衡等等
                 if (registryURL != null) { // 有 注册中心协议的URL
                     // 对有注册中心的Cluster 只用 AvailableCluster
                     URL u = registryURL.addParameter(Constants.CLUSTER_KEY, AvailableCluster.NAME); 
@@ -423,6 +428,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             logger.info("Refer dubbo service " + interfaceClass.getName() + " from url " + invoker.getUrl());
         }
         // 创建服务代理
+        //不管用的是哪种代理模式，最终当访问某个api接口时，调用的是invoker.invoke()->doInvoke()
         return (T) proxyFactory.getProxy(invoker);
     }
 

@@ -115,6 +115,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 		return unexported;
 	}
 
+    /**
+     * 暴露provider
+     */
     public synchronized void export() {
         if (provider != null) {
             if (export == null) {
@@ -485,6 +488,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                         }
                         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, registryURL.addParameterAndEncoded(Constants.EXPORT_KEY, url.toFullString()));
 
+                        /**
+                         * DubboProtocol
+                         */
                         Exporter<?> exporter = protocol.export(invoker);
                         exporters.add(exporter);
                     }

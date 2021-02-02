@@ -250,6 +250,7 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
 
+        //上面都是些参数获取和设置
         openServer(url);
         
         return exporter;
